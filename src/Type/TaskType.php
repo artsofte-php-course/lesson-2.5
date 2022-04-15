@@ -16,7 +16,9 @@ class TaskType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('description', TextareaType::class)
-            ->add('dueDate', DateType::class)
+            ->add('dueDate', DateType::class, [
+                'years' => range(2022,2023)
+            ])
             ->add('save', SubmitType::class)
         ;
     }
