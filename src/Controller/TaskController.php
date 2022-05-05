@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Type\TaskFilterType;
 use App\Type\TaskType;
+use phpDocumentor\Reflection\Types\This;
+use PHPUnit\Util\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,8 +71,6 @@ class TaskController extends AbstractController
                 ]);
         }
 
-
-
         return $this->render('task/list.html.twig', [
             'tasks' => $tasks,
             'filterForm' => $taskFilterForm->createView()
@@ -87,7 +87,7 @@ class TaskController extends AbstractController
         $task = $this->getDoctrine()->getManager()->find(Task::class, $id);
 
         if ($task === null) {
-            return $this->createNotFoundException(sprintf("Task with id %s not found", $id));
+            return $this->render($this->createNotFoundException(sprintf("Task with id %s not found", $id)));
         }
 
         $task->setIsCompleted(true);
@@ -96,5 +96,66 @@ class TaskController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
 
         return $this->redirectToRoute('task_list');
+    }
+
+    /**
+     * @Route("/tasks/{id}/delete", name="task_delete")
+     * @return Response
+     */
+    public function delete($id): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $task = $em -> find(Task::class, $id);
+
+        if (!$task) {
+            throw $this->createNotFoundException('No task for id '.$id);
+        }
+
+        $em -> remove($task);
+        $em -> flush();
+
+        return $this -> redirectToRoute("task_list");
+    }
+
+    /**
+     * @Route("/tasks/{id}/edit", name="task_edit")
+     * @return Response
+     */
+    public function edit($id, Request $request): Response
+    {
+        $em = $this -> getDoctrine() -> getManager();
+        $task = $em -> find(Task::class, $id);
+
+        if (!$task) {
+            throw $this->createNotFoundException('No task for id '.$id);
+        }
+
+        $taskEditForm = $this->createForm(TaskType::class);
+        $taskEditForm -> handleRequest($request);
+
+        if ($taskEditForm -> isSubmitted() && $taskEditForm -> isValid()) {
+            $data = $taskEditForm -> getData();
+
+            $task -> setName($data["name"]);
+            $task -> setDescription($data["description"]);
+            $task -> setRank($data["rank"]);
+            $task -> setDueDate($data["dueDate"]);
+
+            $em -> flush();
+
+            return $this -> redirectToRoute("task_list");
+        } else {
+            $taskEditForm ->setData([
+                'name' => $task->getName(),
+                'description' => $task->getDescription(),
+                'rank' => $task->getRank(),
+                'dueDate' => $task->getDueDate(),
+
+            ]);
+            return $this -> render("task/edit.html.twig", [
+                "form" => $taskEditForm -> createView(),
+                "task_id" => $id,
+            ]);
+        }
     }
 }

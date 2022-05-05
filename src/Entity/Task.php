@@ -33,6 +33,12 @@ class Task
     protected $description;
 
     /**
+     * @ORM\Column(type="integer", nullable=false, options={"default": 3})
+     * @var
+     */
+    protected $rank;
+
+    /**
      * @Assert\NotBlank
      * @Assert\Type("\DateTime")
      * @ORM\Column(type="date")
@@ -53,8 +59,8 @@ class Task
     {
         $this->dueDate = new \DateTime('now');
         $this->isCompleted = false;
+        $this->rank = 1;
     }
-
 
     /**
      * @return mixed
@@ -78,6 +84,22 @@ class Task
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRank()
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param mixed $rank
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
     }
 
     /**

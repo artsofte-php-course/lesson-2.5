@@ -9,7 +9,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class TaskFilterType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -26,6 +25,4 @@ class TaskFilterType extends AbstractType
                 'label' => 'Отфильтровать'
             ]);
     }
-
-
 }

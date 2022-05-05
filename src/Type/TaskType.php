@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class TaskType extends AbstractType
@@ -16,6 +17,9 @@ class TaskType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('description', TextareaType::class)
+            ->add('rank', IntegerType::class, [
+                'attr' => array('min' => 1, 'max' => 5),
+            ])
             ->add('dueDate', DateType::class, [
                 'years' => range(2022,2023)
             ])
