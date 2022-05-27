@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -39,6 +40,38 @@ class Task
      * @var
      */
     protected $dueDate;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default" : 0})
+     * @var boolean
+     */
+    protected $isCompleted;
+
+    /**
+     * @param bool|Boolean $isCompleted
+     */
+    public function __construct()
+    {
+        $this->isCompleted = false;
+        $this->dueDate = new \DateTime('now');
+    }
+
+
+    public function isCompleted() : bool
+    {
+        return $this->isCompleted;
+    }
+
+    public function setIsCompleted($isCompleted)
+    {
+        $this->isCompleted = $isCompleted;
+    }
+
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return mixed

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div style="padding: 50px 550px;">
+        {{ form(filterForm, {"action": path("task_list"), "method": "GET"}) }}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Desc</th>
+            <th scope="col">Due data</th>
+            <th scope="col">is completed</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+            <tr>
+                <th scope="row">{{ task.id }}</th>
+                <td>{{ task.name }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.dueDate|date("d.m.Y") }}</td>
+                <td>{{ task.isCompleted ? 'Completed' : 'Not completed' }}</td>
+                {% if not(task.isCompleted) %}
+                    <td><a href="{{ path("task_complete", {"id" : task.id}) }}" class="btn btn-success">ready</a></td>
+                {% else %}
+                    <td><a href="{{ path("task_undo", {"id" : task.id}) }}" class="btn btn-warning">undo</a></td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path("task_create") }}" class="btn btn-primary" style="float: right">Create task</a>
+    </div>
+{%  endblock %}
