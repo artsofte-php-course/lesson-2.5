@@ -36,9 +36,22 @@ class Task
      * @Assert\NotBlank
      * @Assert\Type("\DateTime")
      * @ORM\Column(type="date")
-     * @var
+     * @var \DateTime
      */
     protected $dueDate;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default" : 0})
+     * @var boolean
+     */
+    protected $isCompleted = false;
+
+
+    public function __construct()
+    {
+        $this->dueDate = new \DateTime('now');
+        $this->isCompleted = false;
+    }
 
     /**
      * @return mixed
@@ -88,7 +101,29 @@ class Task
         $this->dueDate = $dueDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
+    /**
+     * Return true if task is completed
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->isCompleted;
+    }
 
+    /**
+     * @param bool $isCompleted
+     */
+    public function setIsCompleted(bool $isCompleted): void
+    {
+        $this->isCompleted = $isCompleted;
+    }
 
 }
